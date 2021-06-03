@@ -1,0 +1,56 @@
+## Realsense installation procedure 
+## Assuming OpenCV is already installed. If not installed then please install latest opencv on jetson
+## Also I suggest to use Cmake-Gui for selecting cmake options
+
+*____________Preparing environment____________*
+$sudo apt-get install libxinerama-dev libxcursor-dev python3-dev
+$git clone https://github.com/IntelRealSense/librealsense.git
+$cd librealsense/
+$mkdir build && cd build/
+$cmake ../ -DBUILD_PYTHON_BINDINGS:bool=true
+$cmake ../ -DBUILD_PYTHON_BINDINGS:bool=true -DPYTHON_EXECUTABLE=/usr/bin/python3
+*____________Preparing environment____________*
+**********************************************
+* It is better to use cmake-gui option for selecting cmake options
+*build example, bind python, in case of Jetson opencv example has dependency issues such as, intel cpu environment. I suggest don't build opencv examples
+**********************************************
+*____________Build-Make-Install____________*
+$make -j4
+$sudo make install 
+$cd librealsense
+$./scripts/setup_udev_rules.sh 
+$export PYTHONPATH=$PYTHONPATH:/usr/lib/python3/dist-packages/pyrealsense2
+*____________Build-Make-Install____________*
+***********************************************
+*____________Export Path____________*
+*To avoid multiple time export, its better to add pythonpath in bach profile
+$sudo nano ~/.profile
+
+	#Python path pyrealsense
+	export PYTHONPATH=$PYTHONPATH:/usr/lib/python3/dist-packages/pyrealsense2
+*____________Export Path____________*
+***********************************************
+
+*____________To verify installation____________*
+$realsense-viewer
+
+*Python samples are also available in the librealsense directory
+$python3 align-depth2color.py
+$python3 opencv_viewer_example.py
+$python3 opencv_pontcloud_viewer.py
+*____________To verify installation____________*
+
+
+***********************************************
+*____________Faced Issues____________*
+*python samples may have some dependency issues, so you need to install following packages
+
+$pip3 install pyglet
+$sudo apt-get install libcanberra-gtk*
+
+*Also replace following import in each python sample
+import pyrealsense2 as rs -->with--> import pyrealsense2.pyrealsense2 as rs
+otherwise it throws --> AttributeError: module 'pyrealsense2' has no attribute 'pipeline'
+*____________Faced Issues____________*
+***********************************************
+
